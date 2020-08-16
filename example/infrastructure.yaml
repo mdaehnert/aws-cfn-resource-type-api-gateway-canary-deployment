@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: serverless example
+Resources:
+  Function:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      TracingConfig:
+        Mode: "Active"
+      Code:
+        ZipFile: |
+          import json
+          
+          def handler(event, context):
+            return {
+                "statusCode": 200,
+                "body": json.dumps("Hello from Lambda")
+            }
+      Description: "main handler"
+      MemorySize: 128
+      Handler: "index.handler"
+      Role: !GetAtt FunctionRole.Arn
+      Timeout: 5
+      Runtime: "python3.7"
+  FunctionRootPermission:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      Action: "lambda:InvokeFunction"
+      Principal: "apigateway.amazonaws.com"
+      FunctionName: !Ref FunctionVersion12345
+      SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ServerlessRestApi}/*/GET/"
+  Deployment1:
+    Type: "AWS::ApiGateway::Deployment"
+    Properties:
+      RestApiId: !Ref ServerlessRestApi
+      Description: "Deployment"
+  FunctionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      - "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
+  FunctionVersion12345:
+    DeletionPolicy: Retain
+    Type: "AWS::Lambda::Version"
+    Properties:
+      FunctionName: !Ref Function
+#  ServerlessRestApiBlueGreenStage:
+#    Type: "SPRT::ApiGateway::Deployment"
+#    Properties:
+#      DeploymentId: !Ref Deployment1
+#      TracingEnabled: true
+#      RestApiId: !Ref ServerlessRestApi
+  ServerlessRestApi:
+    Type: "AWS::ApiGateway::RestApi"
+    Properties:
+      Body:
+        info:
+          version: "1.0"
+          title: !Ref AWS::StackName
+        paths:
+          '/':
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionVersion12345}/invocations
+              responses: {}
+        openapi: 3.0.1
+        x-amazon-apigateway-gateway-responses:
+          MISSING_AUTHENTICATION_TOKEN:
+            responseParameters: {}
+            responseTemplates:
+              application/*: '{ "message": ?Not found" }'
+            statusCode: "404"
+      EndpointConfiguration:
+        Types:
+        - REGIONAL
+      Parameters:
+        endpointConfigurationTypes: REGIONAL
+  LogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      RetentionInDays: 30
+      LogGroupName: !Sub "/aws/lambda/${Function}"

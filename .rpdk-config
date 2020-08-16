@@ -1,0 +1,11 @@
+{
+    "typeName": "SPRT::ApiGateway::Deployment",
+    "language": "python37",
+    "runtime": "python3.7",
+    "entrypoint": "sprt_apigateway_deployment.handlers.resource",
+    "testEntrypoint": "sprt_apigateway_deployment.handlers.test_entrypoint",
+    "settings": {
+        "use_docker": true,
+        "protocolVersion": "2.0.0"
+    }
+}

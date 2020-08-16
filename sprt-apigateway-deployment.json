@@ -1,0 +1,71 @@
+{
+    "typeName": "SPRT::ApiGateway::Deployment",
+    "description": "Deploys REST APIs with canary settings.",
+    "sourceUrl": "https://github.com/mdaehnert/aws-cfn-resource-type-api-gateway-canary-deployment",
+    "properties": {
+        "DeploymentId": {
+            "description": "A TPS Code is automatically generated on creation and assigned as the unique identifier.",
+            "type": "string"
+        },
+        "RestApiId": {
+            "description": "A TPS Code is automatically generated on creation and assigned as the unique identifier.",
+            "type": "string"
+        },
+        "TracingEnabled": {
+            "description": "A TPS Code is automatically generated on creation and assigned as the unique identifier.",
+            "type": "boolean"
+        },
+        "StageName": {
+            "description": "A TPS Code is automatically generated on creation and assigned as the unique identifier.",
+            "type": "string"
+        },
+        "CanaryPercentage": {
+            "description": "The title of the TPS report is a mandatory element.",
+            "type": "string"
+        }
+    },
+    "additionalProperties": false,
+    "required": [
+        "RestApiId",
+        "DeploymentId"
+    ],
+    "readOnlyProperties": [
+        "/properties/StageName"
+    ],
+    "primaryIdentifier": [
+        "/properties/StageName"
+    ],
+    "handlers": {
+        "create": {
+            "permissions": [
+                "apigateway:PUT",
+                "apigateway:POST",
+                "apigateway:GET",
+                "apigateway:PATCH"
+            ]
+        },
+        "read": {
+            "permissions": [
+                "apigateway:GET"
+            ]
+        },
+        "update": {
+            "permissions": [
+                "apigateway:PUT",
+                "apigateway:POST",
+                "apigateway:GET",
+                "apigateway:PATCH"
+            ]
+        },
+        "delete": {
+            "permissions": [
+                "apigateway:DELETE"
+            ]
+        },
+        "list": {
+            "permissions": [
+                "apigateway:GET"
+            ]
+        }
+    }
+}

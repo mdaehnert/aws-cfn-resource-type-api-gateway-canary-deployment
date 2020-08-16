@@ -1,0 +1,19 @@
+{
+  "credentials": {
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "sessionToken": ""
+  },
+  "action": "CREATE",
+  "request": {
+    "clientRequestToken": "ecba020e-b2e6-4742-a7d0-8a06ae7c4b2b",
+    "desiredResourceState": {
+      "RestApiId": "123",
+      "DeploymentId": "1234",
+      "TracingEnabled": "false"
+    },
+    "previousResourceState": null,
+    "logicalResourceIdentifier": null
+  },
+  "callbackContext": null
+}
