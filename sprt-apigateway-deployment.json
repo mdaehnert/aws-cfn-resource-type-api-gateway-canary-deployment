@@ -29,6 +29,9 @@
         "RestApiId",
         "DeploymentId"
     ],
+    "createOnlyProperties": [
+        "/properties/RestApiId"
+    ],
     "readOnlyProperties": [
         "/properties/StageName"
     ],

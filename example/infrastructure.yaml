@@ -13,7 +13,7 @@ Resources:
           def handler(event, context):
             return {
                 "statusCode": 200,
-                "body": json.dumps("Hello from Lambda")
+                "body": json.dumps("Hello from Lambda 2")
             }
       Description: "main handler"
       MemorySize: 128
@@ -26,9 +26,9 @@ Resources:
     Properties:
       Action: "lambda:InvokeFunction"
       Principal: "apigateway.amazonaws.com"
-      FunctionName: !Ref FunctionVersion12345
+      FunctionName: !Ref FunctionVersion2
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ServerlessRestApi}/*/GET/"
-  Deployment1:
+  Deployment2:
     Type: "AWS::ApiGateway::Deployment"
     Properties:
       RestApiId: !Ref ServerlessRestApi
@@ -46,17 +46,18 @@ Resources:
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
       - "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
-  FunctionVersion12345:
+  FunctionVersion2:
     DeletionPolicy: Retain
     Type: "AWS::Lambda::Version"
     Properties:
       FunctionName: !Ref Function
-#  ServerlessRestApiBlueGreenStage:
-#    Type: "SPRT::ApiGateway::Deployment"
-#    Properties:
-#      DeploymentId: !Ref Deployment1
-#      TracingEnabled: true
-#      RestApiId: !Ref ServerlessRestApi
+  ServerlessRestApiBlueGreenStage:
+    Type: "SPRT::ApiGateway::Deployment"
+    Properties:
+      DeploymentId: !Ref Deployment2
+      TracingEnabled: true
+      RestApiId: !Ref ServerlessRestApi
+      CanaryPercentage: 50
   ServerlessRestApi:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
@@ -70,7 +71,7 @@ Resources:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
-                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionVersion12345}/invocations
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionVersion2}/invocations
               responses: {}
         openapi: 3.0.1
         x-amazon-apigateway-gateway-responses:

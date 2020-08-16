@@ -58,6 +58,7 @@ def update_handler(
         callback_context: MutableMapping[str, Any],
 ) -> ProgressEvent:
     model = request.desiredResourceState
+    previous_state = request.previousResourceState
     LOG.debug(callback_context)
     LOG.debug(request.previousResourceState)
     LOG.debug(request.desiredResourceState)
@@ -68,6 +69,7 @@ def update_handler(
             progress = handle_update(
                 agw_client=client,
                 model=model,
+                previous_state=previous_state,
                 callback_context=callback_context
             )
             return progress
