@@ -90,3 +90,71 @@ Resources:
     Properties:
       RetentionInDays: 30
       LogGroupName: !Sub "/aws/lambda/${Function}"
+  TestFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      TracingConfig:
+        Mode: "Active"
+      Code:
+        ZipFile: !Sub |
+          from urllib import request
+
+          def handler(event, context):
+            with request.urlopen("https://${ServerlessRestApi}.execute-api.eu-west-1.amazonaws.com/green") as response:
+              payload = response.read().decode()
+            if payload == '"Hello from Lambda 2"':
+              return {
+                "status": "SUCCESS"
+              }
+            else:
+              raise ValueError()
+      Description: "main handler"
+      MemorySize: 128
+      Handler: "index.handler"
+      Role: !GetAtt FunctionRole.Arn
+      Timeout: 5
+      Runtime: "python3.7"
+  TestFunctionLogGroup:
+    Type: "AWS::Logs::LogGroup"
+    Properties:
+      RetentionInDays: 30
+      LogGroupName: !Sub "/aws/lambda/${TestFunction}"
+  AccountDeleteFunction:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      RoleArn: !GetAtt StepFunctionRole.Arn
+      StateMachineName: GreenTestFunction
+      DefinitionString: !Sub |
+        {
+          "StartAt": "Test GET on root",
+          "States": {
+            "Test GET on root": {
+              "Type": "Task",
+              "Resource": "${TestFunction.Arn}",
+              "ResultPath": "$.TaskResult",
+              "TimeoutSeconds": 5,
+              "End": true
+            }
+          },
+          "TimeoutSeconds": 10
+        }
+  StepFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: states.amazonaws.com
+          Action: sts:AssumeRole
+      Policies:
+      - PolicyName: TestInvoke
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - lambda:InvokeFunction
+            Resource:
+            - !GetAtt TestFunction.Arn
