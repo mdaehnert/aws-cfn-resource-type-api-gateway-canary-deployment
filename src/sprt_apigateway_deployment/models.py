@@ -44,6 +44,7 @@ class ResourceModel(BaseModel):
     TracingEnabled: Optional[bool]
     StageName: Optional[str]
     CanaryPercentage: Optional[str]
+    GreenTestStateMachineArn: Optional[str]
 
     @classmethod
     def _deserialize(
@@ -60,6 +61,7 @@ class ResourceModel(BaseModel):
             TracingEnabled=json_data.get("TracingEnabled"),
             StageName=json_data.get("StageName"),
             CanaryPercentage=json_data.get("CanaryPercentage"),
+            GreenTestStateMachineArn=json_data.get("GreenTestStateMachineArn"),
         )
 
 

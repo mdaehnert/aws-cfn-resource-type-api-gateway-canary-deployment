@@ -13,7 +13,7 @@ Resources:
           def handler(event, context):
             return {
                 "statusCode": 200,
-                "body": json.dumps("Hello from Lambda 2")
+                "body": json.dumps("Hello from Lambda")
             }
       Description: "main handler"
       MemorySize: 128
@@ -26,9 +26,10 @@ Resources:
     Properties:
       Action: "lambda:InvokeFunction"
       Principal: "apigateway.amazonaws.com"
-      FunctionName: !Ref FunctionVersion2
+      FunctionName: !Ref FunctionVersion1
       SourceArn: !Sub "arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ServerlessRestApi}/*/GET/"
-  Deployment2:
+  Deployment1:
+    DependsOn: FunctionRootPermission
     Type: "AWS::ApiGateway::Deployment"
     Properties:
       RestApiId: !Ref ServerlessRestApi
@@ -46,7 +47,7 @@ Resources:
       ManagedPolicyArns:
       - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
       - "arn:aws:iam::aws:policy/AWSXrayWriteOnlyAccess"
-  FunctionVersion2:
+  FunctionVersion1:
     DeletionPolicy: Retain
     Type: "AWS::Lambda::Version"
     Properties:
@@ -54,10 +55,11 @@ Resources:
   ServerlessRestApiBlueGreenStage:
     Type: "SPRT::ApiGateway::Deployment"
     Properties:
-      DeploymentId: !Ref Deployment2
+      DeploymentId: !Ref Deployment1
       TracingEnabled: true
       RestApiId: !Ref ServerlessRestApi
       CanaryPercentage: 50
+      GreenTestStateMachineArn: !Ref TestStateMachine
   ServerlessRestApi:
     Type: "AWS::ApiGateway::RestApi"
     Properties:
@@ -71,7 +73,7 @@ Resources:
               x-amazon-apigateway-integration:
                 httpMethod: POST
                 type: aws_proxy
-                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionVersion2}/invocations
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FunctionVersion1}/invocations
               responses: {}
         openapi: 3.0.1
         x-amazon-apigateway-gateway-responses:
@@ -100,8 +102,9 @@ Resources:
           from urllib import request
 
           def handler(event, context):
-            with request.urlopen("https://${ServerlessRestApi}.execute-api.eu-west-1.amazonaws.com/green") as response:
+            with request.urlopen("https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/green") as response:
               payload = response.read().decode()
+            print(payload)
             if payload == '"Hello from Lambda 2"':
               return {
                 "status": "SUCCESS"
@@ -119,11 +122,10 @@ Resources:
     Properties:
       RetentionInDays: 30
       LogGroupName: !Sub "/aws/lambda/${TestFunction}"
-  AccountDeleteFunction:
+  TestStateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
       RoleArn: !GetAtt StepFunctionRole.Arn
-      StateMachineName: GreenTestFunction
       DefinitionString: !Sub |
         {
           "StartAt": "Test GET on root",

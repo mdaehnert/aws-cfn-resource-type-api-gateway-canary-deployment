@@ -15,7 +15,8 @@ To declare this entity in your AWS CloudFormation template, use the following sy
         "<a href="#deploymentid" title="DeploymentId">DeploymentId</a>" : <i>String</i>,
         "<a href="#restapiid" title="RestApiId">RestApiId</a>" : <i>String</i>,
         "<a href="#tracingenabled" title="TracingEnabled">TracingEnabled</a>" : <i>Boolean</i>,
-        "<a href="#canarypercentage" title="CanaryPercentage">CanaryPercentage</a>" : <i>String</i>
+        "<a href="#canarypercentage" title="CanaryPercentage">CanaryPercentage</a>" : <i>String</i>,
+        "<a href="#greenteststatemachinearn" title="GreenTestStateMachineArn">GreenTestStateMachineArn</a>" : <i>String</i>
     }
 }
 </pre>
@@ -29,6 +30,7 @@ Properties:
     <a href="#restapiid" title="RestApiId">RestApiId</a>: <i>String</i>
     <a href="#tracingenabled" title="TracingEnabled">TracingEnabled</a>: <i>Boolean</i>
     <a href="#canarypercentage" title="CanaryPercentage">CanaryPercentage</a>: <i>String</i>
+    <a href="#greenteststatemachinearn" title="GreenTestStateMachineArn">GreenTestStateMachineArn</a>: <i>String</i>
 </pre>
 
 ## Properties
@@ -64,6 +66,16 @@ _Type_: Boolean
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
 #### CanaryPercentage
+
+The title of the TPS report is a mandatory element.
+
+_Required_: No
+
+_Type_: String
+
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
+
+#### GreenTestStateMachineArn
 
 The title of the TPS report is a mandatory element.
 

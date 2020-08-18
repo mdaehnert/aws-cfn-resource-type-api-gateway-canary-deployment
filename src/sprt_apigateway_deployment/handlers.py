@@ -62,12 +62,16 @@ def update_handler(
     LOG.debug(callback_context)
     LOG.debug(request.previousResourceState)
     LOG.debug(request.desiredResourceState)
+    LOG.debug(request.logicalResourceIdentifier)
+    LOG.debug(request.clientRequestToken)
     try:
         if isinstance(session, SessionProxy):
             client = session.client("apigateway")
+            states_client = session.client("stepfunctions")
 
             progress = handle_update(
                 agw_client=client,
+                states_client=states_client,
                 model=model,
                 previous_state=previous_state,
                 callback_context=callback_context

@@ -28,6 +28,8 @@ Resources:
                 - "apigateway:PATCH"
                 - "apigateway:POST"
                 - "apigateway:PUT"
+                - "states:DescribeExecution"
+                - "states:StartExecution"
                 Resource: "*"
 Outputs:
   ExecutionRoleArn:

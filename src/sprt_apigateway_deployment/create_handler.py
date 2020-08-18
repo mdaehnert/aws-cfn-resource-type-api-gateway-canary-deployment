@@ -10,10 +10,7 @@ CREATED = "CREATED"
 
 def handle_create(agw_client: APIGatewayClient, model: ResourceModel,
                   callback_context: MutableMapping[str, Any]) -> ProgressEvent:
-    progress = ProgressEvent(
-        status=OperationStatus.IN_PROGRESS,
-        resourceModel=model,
-    )
+    progress = ProgressEvent(status=OperationStatus.IN_PROGRESS)
 
     if callback_context.get("green-status") == CREATED:
         stage_name = "blue"
