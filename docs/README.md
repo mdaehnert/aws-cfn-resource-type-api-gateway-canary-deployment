@@ -1,6 +1,6 @@
 # SPRT::ApiGateway::Deployment
 
-Deploys REST APIs with canary settings.
+Deploys a REST API to ablue and a green stage with canary settings and deployment hooks for tests against the green stage.
 
 ## Syntax
 
@@ -37,7 +37,7 @@ Properties:
 
 #### DeploymentId
 
-A TPS Code is automatically generated on creation and assigned as the unique identifier.
+The ID of an API Gateway deployment that should be released to a blue and a green stage.
 
 _Required_: Yes
 
@@ -47,7 +47,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 #### RestApiId
 
-A TPS Code is automatically generated on creation and assigned as the unique identifier.
+Identifies the API Gateway REST API that should be deployed to a blue and a green stage.
 
 _Required_: Yes
 
@@ -57,7 +57,7 @@ _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/l
 
 #### TracingEnabled
 
-A TPS Code is automatically generated on creation and assigned as the unique identifier.
+Enables X-Ray tracing for both API Gateway stages.
 
 _Required_: No
 
@@ -67,7 +67,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 #### CanaryPercentage
 
-The title of the TPS report is a mandatory element.
+Percentage of the traffic that is routed to an updated deployment for 15 minutes. Provide this value to enable canary deployments and configure CloudWatch alarms and CloudFormation rollback triggers to roll back when canaries do not work as expected.
 
 _Required_: No
 
@@ -77,7 +77,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 #### GreenTestStateMachineArn
 
-The title of the TPS report is a mandatory element.
+ARN of an AWS StepFunction that executes automatich tests against the green stage of the API Gateway after deployment. This STepFunction has to succeed, before the canary deployment on the blue stage starts.
 
 _Required_: No
 
@@ -99,5 +99,5 @@ For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::G
 
 #### StageName
 
-A TPS Code is automatically generated on creation and assigned as the unique identifier.
+The name of the blue stage.
 

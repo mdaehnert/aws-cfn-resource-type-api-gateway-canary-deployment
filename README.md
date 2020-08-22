@@ -1,39 +1,19 @@
 # SPRT::ApiGateway::Deployment
 
-Congratulations on starting development! Next steps:
+This resource type enables blue/green deployments with canaries and automatic tests via CloudFormation. The resource
+provider will generate two stages in given REST API of the API Gateway called _blue_ and _green_. If you create a
+deployment in the same template this deployment will be released to both stages.  
+Upon update, you can execute a given AWS StepFunction that runs tests against the green stage of your API and you can
+configure canary percentages. Canaries will receive traffic for 15 minutes on the blue stage. After that, the change
+will be promoted completely. Use CloudWatch alarms and CloudFormation rollback triggers to handle errors on Canaries. 
 
-1. Write the JSON schema describing your resource, `sprt-apigateway-deployment.json`
-2. Implement your resource handlers in `sprt_apigateway_deployment/handlers.py`
 
-> Don't modify `models.py` by hand, any modifications will be overwritten when the `generate` or `package` commands are run.
+## How to use
+Deploy this resource with `cfn submit`
 
-Implement CloudFormation resource here. Each function must always return a ProgressEvent.
 
-```python
-ProgressEvent(
-    # Required
-    # Must be one of OperationStatus.IN_PROGRESS, OperationStatus.FAILED, OperationStatus.SUCCESS
-    status=OperationStatus.IN_PROGRESS,
-    # Required on SUCCESS (except for LIST where resourceModels is required)
-    # The current resource model after the operation; instance of ResourceModel class
-    resourceModel=model,
-    resourceModels=None,
-    # Required on FAILED
-    # Customer-facing message, displayed in e.g. CloudFormation stack events
-    message="",
-    # Required on FAILED: a HandlerErrorCode
-    errorCode=HandlerErrorCode.InternalFailure,
-    # Optional
-    # Use to store any state between re-invocation via IN_PROGRESS
-    callbackContext={},
-    # Required on IN_PROGRESS
-    # The number of seconds to delay before re-invocation
-    callbackDelaySeconds=0,
-)
-```
-
-Failures can be passed back to CloudFormation by either raising an exception from `cloudformation_cli_python_lib.exceptions`, or setting the ProgressEvent's `status` to `OperationStatus.FAILED` and `errorCode` to one of `cloudformation_cli_python_lib.HandlerErrorCode`. There is a static helper function, `ProgressEvent.failed`, for this common case.
-
-## What's with the type hints?
-
-We hope they'll be useful for getting started quicker with an IDE that support type hints. Type hints are optional - if your code doesn't use them, it will still work.
+## Example
+`example/infrastructure.yaml` is a template that demonstrates how to use this resource. It contains a simple
+"Hello World" That is invoked via API Gateway. A test lambda verifies this at the API with a simple http request. If 
+you want to deploy changes, change the logical ID of the lambda function version and the deployment to force a
+replacement. This should usually be automated, like SAM does it for Lambda versions or via CDK.
