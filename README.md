@@ -21,3 +21,20 @@ replacement. This should usually be automated, like SAM does it for Lambda versi
 
 ## Unit Tests
 Additional unit tests are located in `tests` and can be executed with `pytest`
+
+
+## FAQ
+_Q: Why does this resource deploy two stages at once?_  
+A: Leveraging the default stage resource with a blue/green implementation of the API-Gateway deployment resource type
+would make it easier to create one CloudFormation resource per API resource. However, the default stage resource
+requires the configuration of an initial deployment id. We cannot create the blue/green deployment first as we need to 
+control blue/green and canary settings after the stage creation. Changing this deployment with an additional deployment
+resource would result in an inconsistent state in the template that associates multiple deployments with a stage. This
+behaviour would be confusing. Hence, we manage the blue and the green stage in this resource.
+
+_Q: How is this resource tested?_  
+A: Unfortunately, the Python contract tests aren't running as of now (@see github issue [#112](https://github.com/aws-cloudformation/cloudformation-cli-python-plugin/issues/112)).
+Therefore tests were done with the provided example deployment _example/infrastructure.yaml_.
+
+_Q: What does the name SPRT stand for?_  
+A: That's an easy one: *S*uper *P*eculiar *R*esource *T*ype.
