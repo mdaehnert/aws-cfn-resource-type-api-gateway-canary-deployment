@@ -17,3 +17,7 @@ Deploy this resource with `cfn submit`
 "Hello World" That is invoked via API Gateway. A test lambda verifies this at the API with a simple http request. If 
 you want to deploy changes, change the logical ID of the lambda function version and the deployment to force a
 replacement. This should usually be automated, like SAM does it for Lambda versions or via CDK.
+
+
+## Unit Tests
+Additional unit tests are located in `tests` and can be executed with `pytest`
