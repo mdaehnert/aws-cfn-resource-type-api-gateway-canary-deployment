@@ -13,7 +13,6 @@ from cloudformation_cli_python_lib import (
 from .create_handler import handle_create
 from .delete_handler import handle_delete
 from .models import ResourceHandlerRequest, ResourceModel
-
 from .update_handler import handle_update
 
 # Use this logger to forward log messages to CloudWatch Logs.
@@ -117,24 +116,19 @@ def read_handler(
 ) -> ProgressEvent:
     model = request.desiredResourceState
     LOG.debug(callback_context)
-
-    # TODO: put code here
+    try:
+        if isinstance(session, SessionProxy):
+            client = session.client("apigateway")
+            model.DeploymentId = client.get_stage(
+                restApiId=model.RestApiId,
+                stageName="blue"
+            )["deploymentId"]
+        else:
+            LOG.error("No session available")
+            raise TypeError
+    except TypeError as e:
+        raise exceptions.InternalFailure(f"was not expecting type {e}")
     return ProgressEvent(
         status=OperationStatus.SUCCESS,
         resourceModel=model,
-    )
-
-
-@resource.handler(Action.LIST)
-def list_handler(
-        session: Optional[SessionProxy],
-        request: ResourceHandlerRequest,
-        callback_context: MutableMapping[str, Any],
-) -> ProgressEvent:
-    LOG.debug(callback_context)
-
-    # TODO: put code here
-    return ProgressEvent(
-        status=OperationStatus.SUCCESS,
-        resourceModels=[],
     )

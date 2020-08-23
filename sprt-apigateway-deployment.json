@@ -72,11 +72,6 @@
             "permissions": [
                 "apigateway:DELETE"
             ]
-        },
-        "list": {
-            "permissions": [
-                "apigateway:GET"
-            ]
         }
     }
 }
