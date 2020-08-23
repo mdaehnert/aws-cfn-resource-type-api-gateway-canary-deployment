@@ -15,7 +15,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
         "<a href="#deploymentid" title="DeploymentId">DeploymentId</a>" : <i>String</i>,
         "<a href="#restapiid" title="RestApiId">RestApiId</a>" : <i>String</i>,
         "<a href="#tracingenabled" title="TracingEnabled">TracingEnabled</a>" : <i>Boolean</i>,
-        "<a href="#canarypercentage" title="CanaryPercentage">CanaryPercentage</a>" : <i>String</i>,
+        "<a href="#canarypercentage" title="CanaryPercentage">CanaryPercentage</a>" : <i>Double</i>,
         "<a href="#greenteststatemachinearn" title="GreenTestStateMachineArn">GreenTestStateMachineArn</a>" : <i>String</i>
     }
 }
@@ -29,7 +29,7 @@ Properties:
     <a href="#deploymentid" title="DeploymentId">DeploymentId</a>: <i>String</i>
     <a href="#restapiid" title="RestApiId">RestApiId</a>: <i>String</i>
     <a href="#tracingenabled" title="TracingEnabled">TracingEnabled</a>: <i>Boolean</i>
-    <a href="#canarypercentage" title="CanaryPercentage">CanaryPercentage</a>: <i>String</i>
+    <a href="#canarypercentage" title="CanaryPercentage">CanaryPercentage</a>: <i>Double</i>
     <a href="#greenteststatemachinearn" title="GreenTestStateMachineArn">GreenTestStateMachineArn</a>: <i>String</i>
 </pre>
 
@@ -71,7 +71,7 @@ Percentage of the traffic that is routed to an updated deployment for 15 minutes
 
 _Required_: No
 
-_Type_: String
+_Type_: Double
 
 _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 

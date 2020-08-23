@@ -120,7 +120,7 @@ def _deploy_canaries(agw_client, callback_context, model):
             {
                 "op": "replace",
                 "path": "/canarySettings/percentTraffic",
-                "value": model.CanaryPercentage
+                "value": str(model.CanaryPercentage)
             },
             {
                 "op": "replace",

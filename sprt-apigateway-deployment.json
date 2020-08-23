@@ -21,7 +21,9 @@
         },
         "CanaryPercentage": {
             "description": "Percentage of the traffic that is routed to an updated deployment for 15 minutes. Provide this value to enable canary deployments and configure CloudWatch alarms and CloudFormation rollback triggers to roll back when canaries do not work as expected.",
-            "type": "string"
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 99
         },
         "GreenTestStateMachineArn": {
             "description": "ARN of an AWS StepFunction that executes automatich tests against the green stage of the API Gateway after deployment. This STepFunction has to succeed, before the canary deployment on the blue stage starts.",

@@ -260,7 +260,7 @@ previous_state = ResourceModel(
     TracingEnabled=True,
     StageName="blue",
     GreenTestStateMachineArn="arn:aws:...",
-    CanaryPercentage="15"
+    CanaryPercentage=15
 )
 
 new_deployment = ResourceModel(
@@ -269,7 +269,7 @@ new_deployment = ResourceModel(
     TracingEnabled=True,
     StageName="blue",
     GreenTestStateMachineArn="arn:aws:...",
-    CanaryPercentage="15"
+    CanaryPercentage=15
 )
 
 new_deployment_without_canaries = ResourceModel(
@@ -287,5 +287,5 @@ new_deployment_without_tests = ResourceModel(
     TracingEnabled=True,
     StageName="blue",
     GreenTestStateMachineArn=None,
-    CanaryPercentage="15"
+    CanaryPercentage=15
 )

@@ -43,7 +43,7 @@ class ResourceModel(BaseModel):
     RestApiId: Optional[str]
     TracingEnabled: Optional[bool]
     StageName: Optional[str]
-    CanaryPercentage: Optional[str]
+    CanaryPercentage: Optional[int]
     GreenTestStateMachineArn: Optional[str]
 
     @classmethod
