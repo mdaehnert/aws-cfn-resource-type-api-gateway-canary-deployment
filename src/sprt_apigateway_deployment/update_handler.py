@@ -1,7 +1,7 @@
 import logging
 from typing import MutableMapping, Any
 
-from cloudformation_cli_python_lib import OperationStatus, ProgressEvent
+from cloudformation_cli_python_lib import OperationStatus, ProgressEvent, HandlerErrorCode
 from mypy_boto3_apigateway import APIGatewayClient
 from mypy_boto3_stepfunctions import SFNClient
 
@@ -109,7 +109,12 @@ def _check_test_status(callback_context, states_client, model):
         return ProgressEvent(status=OperationStatus.IN_PROGRESS, resourceModel=model, callbackContext=callback_context)
     else:
         LOG.debug("Tests failed")
-        return ProgressEvent(status=OperationStatus.FAILED, resourceModel=model)
+        return ProgressEvent(
+            status=OperationStatus.FAILED,
+            resourceModel=model,
+            errorCode=HandlerErrorCode.NotUpdatable,
+            message="Tests against green stage failed"
+        )
 
 
 def _deploy_canaries(agw_client, callback_context, model):
